@@ -1,0 +1,94 @@
+.formulario-busca {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+}
+
+.formulario-busca h2 {
+  color: #333;
+  margin-top: 0;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  color: #555;
+  font-weight: bold;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group select {
+  width: calc(100% - 12px);
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.filtros {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.preco {
+  grid-column: 1 / span 2; /* Ocupa duas colunas para melhor visualização */
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.preco input[type="number"] {
+  width: calc(50% - 5px);
+}
+
+.tipo-negocio {
+  grid-column: 1 / span 2; /* Ocupa duas colunas para melhor visualização */
+}
+
+button[type="submit"] {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+}
+
+button[type="submit"]:hover {
+  background-color: #0056b3;
+}
+
+/* Estilos responsivos para telas menores */
+@media (max-width: 768px) {
+  .filtros {
+    grid-template-columns: 1fr; /* Uma coluna em telas menores */
+  }
+
+  .preco {
+    grid-column: 1; /* Ocupa uma coluna em telas menores */
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .preco input[type="number"] {
+    width: 100%;
+  }
+
+  .tipo-negocio {
+    grid-column: 1; /* Ocupa uma coluna em telas menores */
+  }
+}

@@ -1,0 +1,77 @@
+.formulario-anuncio {
+  padding: 20px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-top: 20px;
+}
+
+.formulario-anuncio h2 {
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.formulario-anuncio .mensagem-sucesso {
+  color: green;
+  margin-bottom: 10px;
+  border: 1px solid green;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #e6ffe6;
+}
+
+.formulario-anuncio .mensagem-erro {
+  color: red;
+  margin-bottom: 10px;
+  border: 1px solid red;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #ffe6e6;
+}
+
+.formulario-anuncio form {
+  display: flex;
+  flex-direction: column;
+}
+
+.formulario-anuncio div {
+  margin-bottom: 15px;
+}
+
+.formulario-anuncio label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #555;
+}
+
+.formulario-anuncio input[type="text"],
+.formulario-anuncio input[type="number"],
+.formulario-anuncio select,
+.formulario-anuncio textarea {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1em;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.formulario-anuncio textarea {
+  resize: vertical;
+}
+
+.formulario-anuncio button[type="submit"] {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background-color 0.3s ease;
+}
+
+.formulario-anuncio button[type="submit"]:hover {
+  background-color: #0056b3;
+}

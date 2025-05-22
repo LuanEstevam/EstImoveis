@@ -1,0 +1,90 @@
+/* src/components/admin/AdminContatosList.module.css */
+
+.container {
+  padding: 20px;
+  max-width: 900px;
+  margin: 20px auto;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.container h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 30px;
+}
+
+.contactList {
+  display: grid;
+  gap: 20px;
+}
+
+.contactCard {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+}
+
+.contactCard h3 {
+  color: #007bff;
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 1.2rem;
+}
+
+.contactCard p {
+  margin-bottom: 5px;
+  color: #555;
+  line-height: 1.4;
+}
+
+.contactCard .date {
+  font-size: 0.85rem;
+  color: #777;
+  margin-top: 10px;
+  margin-bottom: 15px;
+  border-top: 1px dashed #eee;
+  padding-top: 10px;
+}
+
+.deleteButton {
+  background-color: #dc3545;
+  color: white;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.3s ease;
+  align-self: flex-end; /* Alinha o botão à direita na parte inferior */
+  margin-top: auto; /* Empurra o botão para baixo se houver espaço */
+}
+
+.deleteButton:hover {
+  background-color: #c82333;
+}
+
+.successMessage {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+  padding: 15px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.errorMessage {
+  color: #dc3545;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  padding: 15px;
+  border-radius: 5px;
+  text-align: center;
+  margin-top: 20px;
+}
