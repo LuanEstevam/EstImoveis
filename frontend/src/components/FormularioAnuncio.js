@@ -26,6 +26,13 @@ function FormularioAnuncio() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    const token = localStorage.getItem('token'); // <--- OBTER O TOKEN DO LOCALSTORAGE
+    if (!token) {
+      setErro('Você precisa estar logado para anunciar um imóvel.');
+      setMensagem('');
+      return; // Interrompe a função se não houver token
+    }
+
     const formData = new FormData();
     formData.append('titulo', titulo);
     formData.append('tipo', tipo);
@@ -46,8 +53,14 @@ function FormularioAnuncio() {
     });
 
     try {
-      const response = await fetch('/api/anunciar', {
+      const response = await fetch('http://localhost:5000/api/anunciar', { // <-- URL COMPLETA
         method: 'POST',
+        headers: {
+        // ESTA É A LINHA CRÍTICA PARA O 401:
+        'Authorization': `Bearer ${token}`
+        // NÃO COLOQUE 'Content-Type': 'multipart/form-data' aqui!
+        // O FormData lida com isso automaticamente.
+      },
         body: formData, // Envie o FormData como corpo da requisição
       });
 

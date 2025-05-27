@@ -1,91 +1,34 @@
+// src/App.js
+
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
+// Componentes da parte pública (frontend)
 import DestaquesHome from './components/DestaquesHome';
 import FormularioBusca from './components/FormularioBusca';
 import MenuPrincipal from './components/MenuPrincipal';
 import ListaDeImoveis from './components/ListaDeImoveis';
 import DetalheImovel from './components/DetalheImovel';
-import FormularioAnuncio from './components/FormularioAnuncio';
+import FormularioAnuncio from './components/FormularioAnuncio'; // Rota pública para "Anunciar"
 import Contato from './components/Contato';
 import WhatsAppButton from './components/WhatsAppButton';
-// Importe useNavigate apenas onde for realmente usado (ex: MenuPrincipal, LoginPage)
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import AdminLayout from './components/admin/AdminLayout';
+import Home from './components/Home.jsx'; // Importe o componente Home
+
+// Componentes da área administrativa e autenticação
+import AdminLayout from './components/admin/AdminLayout.jsx';
 import AdminImoveisList from './components/admin/AdminImoveisList.jsx';
 import AdminImovelEditForm from './components/admin/imoveis/editar/AdminImovelEditForm.jsx';
-import LoginPage from './components/admin/LoginPage.jsx';
+import AdminDashBoard from './components/admin/AdminDashBoard.jsx'; // Importar o Dashboard
+import AdminContatosList from './components/admin/AdminContatosList.jsx'; // Importar a lista de contatos
+import AdminAnunciarImovel from './components/admin/AdminAnunciarImovel.jsx'; // Componente para anunciar imóvel na área admin
+import LoginPage from './components/admin/LoginPage.jsx'; // Componente de login para admin
+
+// Componente para rotas protegidas (AuthRoute)
 import AuthRoute from './components/AuthRoute.jsx';
-import './style.css'; // Ou o caminho correto para o seu CSS global
 
-function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+import './style.css'; // Seu CSS global
 
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      setIsLoggedIn(true);
-    }
-  }, []);
-
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    setIsLoggedIn(false);
-    // A navegação real após o logout será tratada no MenuPrincipal
-  };
-
-  return (
-    <Router>
-      <div>
-        <MenuPrincipal isLoggedIn={isLoggedIn} handleLogout={handleLogout} />
-        <main className="container">
-          <Routes>
-            {/* Rota para a página de Login */}
-            <Route path="/admin/login" element={<LoginPage setIsLoggedIn={setIsLoggedIn} />} />
-
-            {/* Rotas de Administração Protegidas */}
-            <Route path="/admin" element={
-              <AuthRoute isLoggedIn={isLoggedIn}>
-                <AdminLayout />
-              </AuthRoute>
-            }>
-              <Route path="imoveis" element={<AdminImoveisList />} />
-              <Route path="imoveis/editar/:id" element={<AdminImovelEditForm />} />
-              {/* Adicione outras rotas de admin aqui, se houver */}
-            </Route>
-
-            {/* Suas Rotas Públicas Existentes */}
-            <Route path="/" element={<>
-              <section id="banner-principal">
-                <div className="banner-content">
-                  <h2>Encontre o Imóvel Ideal para Você!</h2>
-                </div>
-              </section>
-              <section id="sobre-nos">
-                <h2>Sobre Nós</h2>
-                <p>Aqui você pode inserir uma breve descrição da sua imobiliária, seus valores e diferenciais.</p>
-              </section>
-              <section id="destaques-react">
-                <DestaquesHome />
-              </section>
-            </>} />
-            <Route path="/buscar" element={<PaginaBuscar />} />
-            <Route path="/imovel/:id" element={<DetalheImovel />} />
-            <Route path="/anunciar" element={<FormularioAnuncio />} />
-            <Route path="/contato" element={<Contato />} />
-            <Route path="/imoveis" element={<ListaDeImoveis />} />
-          </Routes>
-        </main>
-        <footer>
-          <div className="container">
-            <p>&copy; {new Date().getFullYear()} Sua Imobiliária</p>
-          </div>
-        </footer>
-        <WhatsAppButton />
-      </div>
-    </Router>
-  );
-}
-
-// Seu componente PaginaBuscar existente (não precisa de useNavigate aqui)
+// --- Componente PaginaBuscar (Pode ser movido para um arquivo separado) ---
 function PaginaBuscar() {
   const [resultadosBusca, setResultadosBusca] = useState([]);
 
@@ -93,7 +36,13 @@ function PaginaBuscar() {
     console.log('Realizando busca com filtros:', filtros);
     const { termo, quartos, banheiros, vagas, cidade, bairro, precoMin, precoMax, tipoNegocio } = filtros;
 
-    let url = `http://localhost:3000/api/buscar?q=${termo || ''}`; // URL completa para o backend
+    // ALERTA: Ajuste esta URL para a porta correta do seu backend
+    // Idealmente, use um proxy no package.json do frontend e use URL relativa `/api/buscar`
+    // Exemplo com proxy configurado (RECOMENDADO):
+    let url = `/api/buscar?q=${termo || ''}`;
+    // Exemplo sem proxy (SE O BACKEND RODA NA PORTA 5000):
+    // let url = `http://localhost:5000/api/buscar?q=${termo || ''}`;
+
     if (quartos) url += `&quartos=${quartos}`;
     if (banheiros) url += `&banheiros=${banheiros}`;
     if (vagas) url += `&vagas=${vagas}`;
@@ -134,6 +83,72 @@ function PaginaBuscar() {
         <p>Nenhum imóvel encontrado para sua busca.</p>
       )}
     </div>
+  );
+}
+// --- Fim do Componente PaginaBuscar ---
+
+function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // Verifica o token no localStorage ao carregar a aplicação
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      setIsLoggedIn(true);
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setIsLoggedIn(false);
+    // A navegação real após o logout será tratada no MenuPrincipal ou AdminLayout
+  };
+
+  return (
+    <Router>
+      <div>
+        {/* Passa o estado de login e a função de logout para o MenuPrincipal */}
+        <MenuPrincipal isLoggedIn={isLoggedIn} handleLogout={handleLogout} />
+        <main className="container">
+          <Routes>
+            {/* Rota de Login para a Área Administrativa */}
+            <Route path="/admin/login" element={<LoginPage setIsLoggedIn={setIsLoggedIn} />} />
+
+            {/* Rotas Administrativas (Protegidas pelo AuthRoute) */}
+            {/* O AuthRoute encapsula as rotas que requerem autenticação */}
+            <Route path="/admin" element={
+              <AuthRoute> {/* AuthRoute verifica o token, não precisa de isLoggedIn aqui */}
+                <AdminLayout /> {/* AdminLayout renderiza o cabeçalho/menu admin e um <Outlet /> para as rotas aninhadas */}
+              </AuthRoute>
+            }>
+              {/* Rotas Aninhadas dentro de /admin */}
+              <Route index element={<AdminDashBoard />} /> {/* /admin (dashboard principal) */}
+              <Route path="imoveis" element={<AdminImoveisList />} /> {/* /admin/imoveis (lista de imóveis) */}
+              <Route path="imoveis/anunciar" element={<AdminAnunciarImovel />} /> {/* /admin/imoveis/anunciar (NOVA ROTA) */}
+              <Route path="imoveis/editar/:id" element={<AdminImovelEditForm />} /> {/* /admin/imoveis/editar/:id (editar imóvel) */}
+              <Route path="contatos" element={<AdminContatosList />} /> {/* /admin/contatos (lista de contatos) */}
+              {/* Adicione outras rotas de admin aqui, se houver */}
+            </Route>
+
+            {/* Suas Rotas Públicas Existentes */}
+            {/* A rota raiz "/" agora usa o componente Home */}
+            <Route path="/" element={<Home />} />
+            
+            <Route path="/buscar" element={<PaginaBuscar />} />
+            <Route path="/imovel/:id" element={<DetalheImovel />} />
+            <Route path="/anunciar" element={<FormularioAnuncio />} /> {/* Formulário de anúncio público */}
+            <Route path="/contato" element={<Contato />} />
+            <Route path="/imoveis" element={<ListaDeImoveis />} />
+          </Routes>
+        </main>
+        <footer>
+          <div className="container">
+            <p>&copy; {new Date().getFullYear()} Sua Imobiliária</p>
+          </div>
+        </footer>
+        <WhatsAppButton />
+      </div>
+    </Router>
   );
 }
 

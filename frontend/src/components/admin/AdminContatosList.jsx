@@ -16,7 +16,7 @@ function AdminContatosList() {
         throw new Error('Token de autenticação não encontrado. Faça login novamente.');
       }
 
-      const response = await fetch('http://localhost:3000/admin/contatos', {
+      const response = await fetch('http://localhost:5000/api/admin/contatos', { // <-- URL COMPLETA
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`

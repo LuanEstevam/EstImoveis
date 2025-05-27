@@ -1,6 +1,7 @@
+// src/components/admin/AdminImoveisList.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import styles from './AdminImoveisList.module.css';
+import styles from './AdminImoveisList.module.css'; // Certifique-se que este arquivo exista e tenha as classes
 
 function AdminImoveisList() {
   const [imoveis, setImoveis] = useState([]);
@@ -21,7 +22,9 @@ function AdminImoveisList() {
         throw new Error('Token de autenticação não encontrado. Faça login novamente.');
       }
 
-      const response = await fetch('http://localhost:3000/admin/imoveis', {
+      // Usando URL relativa com proxy para o backend na porta 5000.
+      // Assumimos que a rota para listar imóveis é '/api/imoveis/admin' no seu backend.
+      const response = await fetch('http://localhost:5000/api/imoveis/admin', { // <-- URL COMPLETA
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -36,6 +39,7 @@ function AdminImoveisList() {
           const errorData = JSON.parse(errorText);
           errorMessage = errorData.message || errorMessage;
         } catch (e) {
+          // Se a resposta não for JSON, pegamos um trecho e o status
           errorMessage = `Erro inesperado do servidor. Resposta não é JSON. Status: ${response.status}. Conteúdo: ${errorText.substring(0, 100)}...`;
         }
         throw new Error(errorMessage);
@@ -62,7 +66,9 @@ function AdminImoveisList() {
           throw new Error('Token de autenticação não encontrado. Faça login novamente.');
         }
 
-        const response = await fetch(`http://localhost:3000/api/imoveis/${id}`, {
+        // Usando URL relativa com proxy para o backend na porta 5000.
+        // Assumimos que a rota para deletar um imóvel é DELETE '/api/imoveis/:id' no seu backend.
+        const response = await fetch(`/api/imoveis/${id}`, {
           method: 'DELETE',
           headers: {
             'Authorization': `Bearer ${token}`
@@ -81,9 +87,10 @@ function AdminImoveisList() {
           }
           throw new Error(errorMessage);
         }
-        const data = await response.json();
+        const data = await response.json(); // Backend deve retornar confirmação JSON
         setSuccessMessage('Imóvel excluído com sucesso!');
-        setImoveis(prevImoveis => prevImoveis.filter(imovel => imovel.id !== id));
+        // Remove o imóvel da lista no estado local (assumindo _id do MongoDB)
+        setImoveis(prevImoveis => prevImoveis.filter(imovel => imovel._id !== id));
         setTimeout(() => setSuccessMessage(''), 3000);
       } catch (err) {
         setError(err);
@@ -105,7 +112,9 @@ function AdminImoveisList() {
 
       console.log(`Tentando atualizar status do imóvel ${imovelId} para: ${newStatus}`);
 
-      const response = await fetch(`http://localhost:3000/admin/imoveis/${imovelId}/status`, {
+      // Usando URL relativa com proxy para o backend na porta 5000.
+      // Assumimos que a rota para atualizar o status é PUT '/api/imoveis/:id/status' no seu backend.
+      const response = await fetch(`/api/imoveis/${imovelId}/status`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -123,9 +132,10 @@ function AdminImoveisList() {
       console.log('Status atualizado com sucesso:', data);
       setStatusUpdateSuccess(`Status do imóvel #${imovelId} atualizado para "${newStatus}".`);
 
+      // Atualiza o status do imóvel na lista no estado local (assumindo _id do MongoDB)
       setImoveis(prevImoveis =>
         prevImoveis.map(imovel =>
-          imovel.id === imovelId ? { ...imovel, status: newStatus } : imovel
+          imovel._id === imovelId ? { ...imovel, status: newStatus } : imovel
         )
       );
       setTimeout(() => setStatusUpdateSuccess(''), 3000);
@@ -139,7 +149,7 @@ function AdminImoveisList() {
 
   useEffect(() => {
     fetchImoveis();
-  }, []);
+  }, []); // O array vazio [] garante que fetchImoveis seja chamado apenas uma vez no carregamento do componente
 
   if (loading) {
     return <div className={styles.loading}>Carregando imóveis para administração...</div>;
@@ -161,14 +171,16 @@ function AdminImoveisList() {
       {statusUpdateError && <div className={styles.errorMessage}>Erro ao atualizar status: {statusUpdateError.message}</div>}
 
       <div className={styles.imoveisGrid}>
-        {imoveis.length === 0 ? ( // <<-- LINHA 166: AQUI NÃO TEM MAIS O PARÊNTESE EXTRA.
+        {imoveis.length === 0 ? (
           <p className={styles.noImoveisMessage}>Nenhum imóvel cadastrado ainda.</p>
         ) : (
           imoveis.map(imovel => (
-            <div key={imovel.id} className={styles.imovelCard}>
-              <p>ID: {imovel.id}</p>
+            // Usamos 'imovel._id' consistentemente para o ID do imóvel, assumindo MongoDB.
+            // Se você usa outro DB, ajuste para 'imovel.id' ou o nome correto da sua PK.
+            <div key={imovel._id} className={styles.imovelCard}>
+              <p>ID: {imovel._id}</p>
               <h3>{imovel.titulo}</h3>
-              <p>Preço: R$ {imovel.preco ? imovel.preco.toLocaleString('pt-BR') : 'N/A'}</p>
+              <p>Preço: R$ {imovel.preco ? parseFloat(imovel.preco).toLocaleString('pt-BR', { minimumFractionDigits: 2 }) : 'N/A'}</p>
               <p>Tipo: {imovel.tipo}</p>
               <p>Endereço: {imovel.endereco}, {imovel.bairro}, {imovel.cidade}</p>
               <p>Quartos: {imovel.quartos} | Banheiros: {imovel.banheiros} | Vagas: {imovel.vagas}</p>
@@ -178,12 +190,13 @@ function AdminImoveisList() {
               <p>Descrição: {imovel.descricao ? imovel.descricao.substring(0, 100) + '...' : 'N/A'}</p>
 
               <div className={styles.statusControl}>
-                <label htmlFor={`status-${imovel.id}`}>Status:</label>
+                <label htmlFor={`status-${imovel._id}`}>Status:</label>
+                {/* A tag <select> e suas propriedades DEVE ser definida assim, com todos os atributos DENTRO dos parênteses angulares < > */}
                 <select
-                  id={`status-${imovel.id}`}
-                  value={imovel.status || 'pendente'}
-                  onChange={(e) => handleStatusChange(imovel.id, e.target.value)}
-                  className={styles.statusSelect}
+                  id={`status-${imovel._id}`} // ID da select
+                  value={imovel.status || 'pendente'} // Valor atual selecionado
+                  onChange={(e) => handleStatusChange(imovel._id, e.target.value)} // Handler de mudança
+                  className={styles.statusSelect} // Classe CSS
                 >
                   <option value="pendente">Pendente</option>
                   <option value="aprovado">Aprovado</option>
@@ -195,18 +208,20 @@ function AdminImoveisList() {
 
               {imovel.fotos && imovel.fotos.length > 0 && (
                 <div className={styles.fotoContainer}>
-                  <img src={`http://localhost:3000${imovel.fotos[0]}`} alt={imovel.titulo} className={styles.imovelFoto} />
+                  {/* Assumindo que o backend serve imagens estáticas em `http://localhost:5000/uploads/`
+                      e `imovel.fotos[0]` contém o caminho relativo da imagem, e.g., `/uploads/minhafoto.jpg` */}
+                  <img src={`http://localhost:5000${imovel.fotos[0]}`} alt={imovel.titulo} className={styles.imovelFoto} />
                 </div>
               )}
               <div className={styles.buttons}>
                 <button
-                  onClick={() => navigate(`/admin/imoveis/editar/${imovel.id}`)}
+                  onClick={() => navigate(`/admin/imoveis/editar/${imovel._id}`)}
                   className={styles.editButton}
                 >
                   Editar
                 </button>
                 <button
-                  onClick={() => handleDeleteImovel(imovel.id)}
+                  onClick={() => handleDeleteImovel(imovel._id)}
                   className={styles.deleteButton}
                 >
                   Excluir
