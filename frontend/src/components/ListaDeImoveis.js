@@ -1,4 +1,5 @@
 import React from 'react';
+import './ListaDeImoveis.css';
 import { Link } from 'react-router-dom'; // Importe Link
 
 function ListaDeImoveis({ imoveis }) {

@@ -1,3 +1,4 @@
+// src/components/FormularioBusca.js
 import React, { useState } from 'react';
 import './FormularioBusca.css'; // Crie um arquivo CSS para estilizar o formulário
 

@@ -1,38 +1,319 @@
-.detalhe-imovel {
-  padding: 25px;
-  background-color: #fff;
-  border: 1px solid #e0e0e0;
-  border-radius: 10px;
-  margin-top: 30px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+/* src/components/DetalheImovel.css */
+
+.detalhe-imovel-container {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px var(--cor-sombra);
+    margin: 40px auto;
+    max-width: 900px;
 }
 
-.detalhe-imovel h2 {
-  font-size: 2.2em;
-  color: #2c3e50;
-  margin-bottom: 20px;
-  border-bottom: 2px solid #ecf0f1;
-  padding-bottom: 10px;
+.detalhe-imovel-container h2 {
+    font-size: 2.8rem;
+    color: var(--cor-principal);
+    text-align: center;
+    margin-bottom: 25px;
+    position: relative;
+    padding-bottom: 15px;
 }
 
-.detalhe-imovel .preco {
-  font-size: 1.8em;
-  color: #27ae60;
-  font-weight: bold;
-  margin-bottom: 15px;
+.detalhe-imovel-container h2::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background-color: var(--cor-acento);
+    border-radius: 2px;
 }
 
-.detalhe-imovel p {
-  line-height: 1.6;
-  color: #34495e;
-  margin-bottom: 12px;
+.carrossel-fotos {
+    position: relative;
+    width: 100%;
+    height: 450px; /* Altura fixa para o carrossel */
+    background-color: #e9ecef;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.detalhe-imovel img {
-  width: 100%;
-  max-height: 400px;
-  object-fit: cover;
-  border-radius: 8px;
-  margin-top: 20px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+.carrossel-fotos img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Garante que a imagem preencha o espaço sem distorcer */
+    display: block; /* Remove o espaço extra abaixo da imagem */
+    transition: opacity 0.5s ease-in-out;
+}
+
+.carrossel-fotos .navegacao-carrossel {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 15px;
+}
+
+.carrossel-fotos .navegacao-carrossel button {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.5rem;
+    line-height: 1; /* Alinha o texto do botão verticalmente */
+    transition: background-color 0.3s ease;
+}
+
+.carrossel-fotos .navegacao-carrossel button:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.carrossel-fotos .dots-indicadores {
+    position: absolute;
+    bottom: 15px;
+    display: flex;
+    gap: 8px;
+}
+
+.carrossel-fotos .dots-indicadores .dot {
+    width: 10px;
+    height: 10px;
+    background-color: rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.carrossel-fotos .dots-indicadores .dot.active {
+    background-color: var(--cor-acento);
+    transform: scale(1.2);
+}
+
+
+.info-geral {
+    margin-bottom: 30px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.info-geral div {
+    background-color: var(--cor-fundo-claro);
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 4px solid var(--cor-secundaria);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.info-geral div p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: var(--cor-texto-escuro);
+}
+
+.info-geral div strong {
+    display: block;
+    font-size: 1.1rem;
+    color: var(--cor-principal);
+    margin-bottom: 5px;
+}
+
+.detalhes-texto p {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    margin-bottom: 20px;
+    color: var(--cor-texto-escuro);
+}
+
+.detalhes-texto ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+}
+
+.detalhes-texto ul li {
+    background-color: var(--cor-fundo-claro);
+    padding: 10px 15px;
+    border-left: 3px solid var(--cor-acento);
+    border-radius: 5px;
+    font-size: 0.95rem;
+    color: var(--cor-texto-escuro);
+}
+
+.detalhes-texto h3, .localizacao h3 {
+    font-size: 1.8rem;
+    color: var(--cor-principal);
+    margin-top: 30px;
+    margin-bottom: 15px;
+    padding-bottom: 5px;
+    border-bottom: 2px solid var(--cor-borda);
+}
+
+.localizacao {
+    margin-top: 40px;
+}
+
+.mapa-container {
+    width: 100%;
+    height: 400px; /* Altura do mapa */
+    background-color: #e9ecef;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.mapa-container iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .detalhe-imovel-container {
+        padding: 20px;
+        margin: 20px auto;
+    }
+
+    .detalhe-imovel-container h2 {
+        font-size: 2rem;
+    }
+
+    .carrossel-fotos {
+        height: 300px; /* Reduz altura do carrossel em mobile */
+    }
+
+    .carrossel-fotos .navegacao-carrossel button {
+        padding: 8px 12px;
+        font-size: 1.2rem;
+    }
+
+    .info-geral {
+        grid-template-columns: 1fr; /* Uma coluna em mobile */
+    }
+
+    .detalhes-texto ul {
+        grid-template-columns: 1fr; /* Uma coluna para lista de características */
+    }
+
+    .mapa-container {
+        height: 300px; /* Reduz altura do mapa em mobile */
+    }
+}
+/* Estilos para o Formulário de Contato na Página de Detalhes */
+.form-contato-imovel {
+    margin-top: 50px;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px var(--cor-sombra);
+    border: 1px solid var(--cor-borda);
+}
+
+.form-contato-imovel h3 {
+    font-size: 2rem;
+    color: var(--cor-principal);
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.form-contato-imovel .form-group {
+    margin-bottom: 20px;
+}
+
+.form-contato-imovel label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--cor-texto-escuro);
+}
+
+.form-contato-imovel input[type="text"],
+.form-contato-imovel input[type="email"],
+.form-contato-imovel input[type="tel"],
+.form-contato-imovel textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--cor-borda);
+    border-radius: 8px;
+    font-size: 1rem;
+    color: var(--cor-texto-escuro);
+    background-color: var(--cor-fundo-claro);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-contato-imovel input:focus,
+.form-contato-imovel textarea:focus {
+    border-color: var(--cor-secundaria);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+}
+
+.form-contato-imovel textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+.form-contato-imovel button[type="submit"] {
+    width: 100%;
+    padding: 15px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    border-radius: 8px;
+    background-color: var(--cor-secundaria);
+    color: var(--cor-texto-claro);
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.form-contato-imovel button[type="submit"]:hover {
+    background-color: var(--cor-acento);
+    transform: translateY(-2px);
+}
+
+/* Mensagens de feedback */
+.form-message {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.form-message.success {
+    background-color: #d4edda; /* Verde claro */
+    color: #155724; /* Verde escuro */
+    border: 1px solid #c3e6cb;
+}
+
+.form-message.error {
+    background-color: #f8d7da; /* Vermelho claro */
+    color: #721c24; /* Vermelho escuro */
+    border: 1px solid #f5c6cb;
+}
+
+/* Responsividade para o formulário */
+@media (max-width: 768px) {
+    .form-contato-imovel {
+        padding: 20px;
+        margin-top: 30px;
+    }
+
+    .form-contato-imovel h3 {
+        font-size: 1.6rem;
+    }
 }

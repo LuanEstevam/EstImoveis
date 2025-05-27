@@ -22,9 +22,8 @@ function AdminImoveisList() {
         throw new Error('Token de autenticação não encontrado. Faça login novamente.');
       }
 
-      // Usando URL relativa com proxy para o backend na porta 5000.
-      // Assumimos que a rota para listar imóveis é '/api/imoveis/admin' no seu backend.
-      const response = await fetch('http://localhost:5000/api/imoveis/admin', { // <-- URL COMPLETA
+      // Usando URL completa para o backend na porta 5000.
+      const response = await fetch('http://localhost:5000/api/imoveis/admin', {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -39,7 +38,6 @@ function AdminImoveisList() {
           const errorData = JSON.parse(errorText);
           errorMessage = errorData.message || errorMessage;
         } catch (e) {
-          // Se a resposta não for JSON, pegamos um trecho e o status
           errorMessage = `Erro inesperado do servidor. Resposta não é JSON. Status: ${response.status}. Conteúdo: ${errorText.substring(0, 100)}...`;
         }
         throw new Error(errorMessage);
@@ -55,7 +53,7 @@ function AdminImoveisList() {
     }
   };
 
-  const handleDeleteImovel = async (id) => {
+  const handleDeleteImovel = async (id) => { // id já é o ID correto do SQLite
     if (window.confirm('Tem certeza que deseja excluir este imóvel? Esta ação é irreversível e excluirá as fotos!')) {
       setLoading(true);
       setError(null);
@@ -66,9 +64,8 @@ function AdminImoveisList() {
           throw new Error('Token de autenticação não encontrado. Faça login novamente.');
         }
 
-        // Usando URL relativa com proxy para o backend na porta 5000.
-        // Assumimos que a rota para deletar um imóvel é DELETE '/api/imoveis/:id' no seu backend.
-        const response = await fetch(`/api/imoveis/${id}`, {
+        // Usando URL completa para o backend na porta 5000.
+        const response = await fetch(`http://localhost:5000/api/imoveis/${id}`, {
           method: 'DELETE',
           headers: {
             'Authorization': `Bearer ${token}`
@@ -89,8 +86,8 @@ function AdminImoveisList() {
         }
         const data = await response.json(); // Backend deve retornar confirmação JSON
         setSuccessMessage('Imóvel excluído com sucesso!');
-        // Remove o imóvel da lista no estado local (assumindo _id do MongoDB)
-        setImoveis(prevImoveis => prevImoveis.filter(imovel => imovel._id !== id));
+        // Remove o imóvel da lista no estado local pelo ID correto do SQLite
+        setImoveis(prevImoveis => prevImoveis.filter(imovel => imovel.id !== id));
         setTimeout(() => setSuccessMessage(''), 3000);
       } catch (err) {
         setError(err);
@@ -101,20 +98,18 @@ function AdminImoveisList() {
     }
   };
 
-  const handleStatusChange = async (imovelId, newStatus) => {
+  const handleStatusChange = async (imovelId, newStatus) => { // imovelId já é o ID correto do SQLite
     setStatusUpdateError(null);
     setStatusUpdateSuccess('');
+    console.log(`DEBUG (Frontend): Tentando atualizar status do imóvel ID: ${imovelId} para: ${newStatus}`); // Log de depuração
     try {
       const token = localStorage.getItem('token');
       if (!token) {
         throw new Error('Token de autenticação não encontrado. Faça login novamente.');
       }
 
-      console.log(`Tentando atualizar status do imóvel ${imovelId} para: ${newStatus}`);
-
-      // Usando URL relativa com proxy para o backend na porta 5000.
-      // Assumimos que a rota para atualizar o status é PUT '/api/imoveis/:id/status' no seu backend.
-      const response = await fetch(`/api/imoveis/${imovelId}/status`, {
+      // Usando URL completa para o backend na porta 5000.
+      const response = await fetch(`http://localhost:5000/api/imoveis/${imovelId}/status`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -124,7 +119,14 @@ function AdminImoveisList() {
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
+        const errorText = await response.text();
+        console.error('DEBUG (Frontend - AdminImoveisList PUT Status): Resposta de erro do backend (texto):', errorText);
+        let errorData;
+        try {
+            errorData = JSON.parse(errorText);
+        } catch (e) {
+            errorData = {}; // Garante que errorData seja um objeto mesmo se o parse falhar
+        }
         throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
       }
 
@@ -132,10 +134,10 @@ function AdminImoveisList() {
       console.log('Status atualizado com sucesso:', data);
       setStatusUpdateSuccess(`Status do imóvel #${imovelId} atualizado para "${newStatus}".`);
 
-      // Atualiza o status do imóvel na lista no estado local (assumindo _id do MongoDB)
+      // Atualiza o status do imóvel na lista no estado local pelo ID correto do SQLite
       setImoveis(prevImoveis =>
         prevImoveis.map(imovel =>
-          imovel._id === imovelId ? { ...imovel, status: newStatus } : imovel
+          imovel.id === imovelId ? { ...imovel, status: newStatus } : imovel
         )
       );
       setTimeout(() => setStatusUpdateSuccess(''), 3000);
@@ -175,10 +177,9 @@ function AdminImoveisList() {
           <p className={styles.noImoveisMessage}>Nenhum imóvel cadastrado ainda.</p>
         ) : (
           imoveis.map(imovel => (
-            // Usamos 'imovel._id' consistentemente para o ID do imóvel, assumindo MongoDB.
-            // Se você usa outro DB, ajuste para 'imovel.id' ou o nome correto da sua PK.
-            <div key={imovel._id} className={styles.imovelCard}>
-              <p>ID: {imovel._id}</p>
+            // Use 'imovel.id' para o ID do imóvel, que é a chave primária no SQLite.
+            <div key={imovel.id} className={styles.imovelCard}>
+              <p>ID: {imovel.id}</p>
               <h3>{imovel.titulo}</h3>
               <p>Preço: R$ {imovel.preco ? parseFloat(imovel.preco).toLocaleString('pt-BR', { minimumFractionDigits: 2 }) : 'N/A'}</p>
               <p>Tipo: {imovel.tipo}</p>
@@ -190,13 +191,12 @@ function AdminImoveisList() {
               <p>Descrição: {imovel.descricao ? imovel.descricao.substring(0, 100) + '...' : 'N/A'}</p>
 
               <div className={styles.statusControl}>
-                <label htmlFor={`status-${imovel._id}`}>Status:</label>
-                {/* A tag <select> e suas propriedades DEVE ser definida assim, com todos os atributos DENTRO dos parênteses angulares < > */}
+                <label htmlFor={`status-${imovel.id}`}>Status:</label>
                 <select
-                  id={`status-${imovel._id}`} // ID da select
-                  value={imovel.status || 'pendente'} // Valor atual selecionado
-                  onChange={(e) => handleStatusChange(imovel._id, e.target.value)} // Handler de mudança
-                  className={styles.statusSelect} // Classe CSS
+                  id={`status-${imovel.id}`}
+                  value={imovel.status || 'pendente'}
+                  onChange={(e) => handleStatusChange(imovel.id, e.target.value)}
+                  className={styles.statusSelect}
                 >
                   <option value="pendente">Pendente</option>
                   <option value="aprovado">Aprovado</option>
@@ -208,20 +208,31 @@ function AdminImoveisList() {
 
               {imovel.fotos && imovel.fotos.length > 0 && (
                 <div className={styles.fotoContainer}>
-                  {/* Assumindo que o backend serve imagens estáticas em `http://localhost:5000/uploads/`
-                      e `imovel.fotos[0]` contém o caminho relativo da imagem, e.g., `/uploads/minhafoto.jpg` */}
-                  <img src={`http://localhost:5000${imovel.fotos[0]}`} alt={imovel.titulo} className={styles.imovelFoto} />
+                  {/* Verifica se imovel.fotos[0] existe antes de tentar usá-lo */}
+                  {imovel.fotos[0] ? (
+                    <img
+                      src={`http://localhost:5000${imovel.fotos[0]}`}
+                      alt={imovel.titulo}
+                      className={styles.imovelFoto}
+                    />
+                  ) : (
+                    <img
+                      src="/img/imagem-padrao.jpg" // Imagem padrão se não houver foto
+                      alt="Imagem padrão"
+                      className={styles.imovelFoto}
+                    />
+                  )}
                 </div>
               )}
               <div className={styles.buttons}>
                 <button
-                  onClick={() => navigate(`/admin/imoveis/editar/${imovel._id}`)}
+                  onClick={() => navigate(`/admin/imoveis/editar/${imovel.id}`)}
                   className={styles.editButton}
                 >
                   Editar
                 </button>
                 <button
-                  onClick={() => handleDeleteImovel(imovel._id)}
+                  onClick={() => handleDeleteImovel(imovel.id)}
                   className={styles.deleteButton}
                 >
                   Excluir

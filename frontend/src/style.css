@@ -1,221 +1,350 @@
-/* Estilos Globais */
-body {
-    font-family: sans-serif;
+/* src/style.css */
+
+/* Definição de Variáveis CSS (Cores) */
+:root {
+    --cor-principal: #0A1C2B; /* Azul marinho escuro - Confiança, Profissionalismo */
+    --cor-secundaria: #007BFF; /* Azul padrão - Modernidade, Clareza */
+    --cor-acento: #FF6F00; /* Laranja vibrante - Destaque, Energia */
+    --cor-sucesso: #28A745; /* Verde - Confirmação, Disponível */
+    --cor-texto-claro: #F8F9FA; /* Branco suave - Para fundos escuros */
+    --cor-texto-escuro: #343A40; /* Cinza chumbo - Para texto principal */
+    --cor-fundo-claro: #F8F9FA; /* Fundo suave */
+    --cor-borda: #CED4DA; /* Cinza para bordas */
+    --cor-sombra: rgba(0, 0, 0, 0.1); /* Sombra leve */
+}
+
+/* Reset Básico e Fontes */
+* {
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
-    color: #333;
+    box-sizing: border-box; /* Essencial para que padding e border não aumentem a largura/altura */
+}
+
+body {
+    font-family: 'Arial', sans-serif;
     line-height: 1.6;
+    color: var(--cor-texto-escuro);
+    background-color: var(--cor-fundo-claro);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    display: flex; /* Para o layout de "sticky footer" */
+    flex-direction: column; /* Para o layout de "sticky footer" */
+    min-height: 100vh; /* Garante que o body ocupe a altura total da viewport */
 }
 
 .container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 0 20px; /* Padding apenas nas laterais para alinhar com a navegação */
+    width: 100%; /* Garante que o container use a largura máxima */
 }
 
-/* Cabeçalho */
-header {
-    background-color: #333;
-    color: #fff;
-    padding: 1em 0;
-}
-
-header .container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-header h1 {
-    margin: 0;
-}
-
-header nav ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-}
-
-header nav li {
-    margin-left: 20px;
-}
-
-header nav a {
-    color: #fff;
+/* Links Globais */
+a {
+    color: var(--cor-secundaria);
     text-decoration: none;
     transition: color 0.3s ease;
 }
 
-header nav a:hover {
-    color: #ddd;
+a:hover {
+    color: var(--cor-acento);
 }
 
-/* Banner Principal */
-#banner-principal {
-    background-color: #eee;
-    padding: 50px 0;
-    text-align: center;
-}
-
-.banner-content {
-    max-width: 800px;
-    margin: 0 auto;
-}
-
-#form-busca input[type="text"] {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px 0 0 5px;
-    width: 70%;
-    font-size: 1em;
-}
-
-#form-busca button[type="submit"] {
+/* Botões Globais */
+button, .button {
+    background-color: var(--cor-secundaria);
+    color: var(--cor-texto-claro);
     padding: 10px 20px;
-    background-color: #007bff;
-    color: #fff;
     border: none;
-    border-radius: 0 5px 5px 0;
-    cursor: pointer;
-    font-size: 1em;
-    transition: background-color 0.3s ease;
-}
-
-#form-busca button[type="submit"]:hover {
-    background-color: #0056b3;
-}
-
-/* Destaques */
-#destaques {
-    padding: 30px 0;
-    text-align: center;
-}
-
-.lista-destaques {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
-    margin-top: 20px;
-}
-
-.card-imovel {
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    width: 300px;
-    transition: transform 0.3s ease-in-out;
-}
-
-.card-imovel:hover {
-    transform: translateY(-5px);
-}
-
-.card-imovel img {
-    width: 100%;
-    display: block;
-    height: auto;
-}
-
-.info-imovel {
-    padding: 15px;
-    text-align: left;
-}
-
-.info-imovel h3 {
-    margin-top: 0;
-    margin-bottom: 5px;
-    font-size: 1.2em;
-}
-
-.info-imovel .preco {
-    color: #5cb85c;
-    font-weight: bold;
-    margin-bottom: 10px;
-}
-
-.info-imovel .ver-detalhes {
-    display: inline-block;
-    background-color: #007bff;
-    color: #fff;
-    padding: 8px 15px;
-    text-decoration: none;
     border-radius: 5px;
-    transition: background-color 0.3s ease;
-}
-
-.info-imovel .ver-detalhes:hover {
-    background-color: #0056b3;
-}
-
-/* Sobre Nós */
-#sobre-nos {
-    padding: 30px 0;
-    background-color: #eee;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease, transform 0.2s ease;
     text-align: center;
+    display: inline-block;
 }
 
-#sobre-nos p {
-    max-width: 800px;
-    margin: 20px auto;
+button:hover, .button:hover {
+    background-color: var(--cor-acento);
+    transform: translateY(-2px);
 }
 
-/* Rodapé */
-footer {
-    background-color: #333;
-    color: #fff;
+/* Estilos de Títulos */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--cor-principal);
+    margin-bottom: 15px;
+}
+
+h2 {
+    font-size: 2.2rem;
     text-align: center;
-    padding: 1em 0;
+    margin-top: 50px; /* Aumentado para dar mais espaço acima */
+    margin-bottom: 30px;
     position: relative;
+    padding-bottom: 10px;
+}
+
+h2::after {
+    content: '';
+    position: absolute;
+    left: 50%;
     bottom: 0;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background-color: var(--cor-acento);
+    border-radius: 2px;
+}
+
+/* --- Menu Principal (Header) --- */
+header {
+    background-color: var(--cor-principal);
+    color: var(--cor-texto-claro);
+    padding: 15px 0;
+    box-shadow: 0 2px 5px var(--cor-sombra);
+    position: sticky; /* Menu fixo no topo ao rolar */
+    top: 0;
+    z-index: 1000; /* Garante que o menu fique acima de outros elementos */
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.logo a {
+    color: var(--cor-texto-claro);
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+}
+
+.nav-links li {
+    margin-left: 30px;
+}
+
+.nav-links a {
+    color: var(--cor-texto-claro);
+    font-weight: 500;
+    padding: 5px 0;
+    position: relative;
+}
+
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    background-color: var(--cor-acento);
+    left: 0;
+    bottom: -5px;
+    transition: width 0.3s ease;
+}
+
+.nav-links a:hover::after {
     width: 100%;
 }
 
-footer .container {
-    padding: 1em;
+.nav-links a.active::after { /* Para rota ativa */
+    width: 100%;
 }
 
-/* Media Queries para Responsividade (Exemplo Básico) */
-@media (max-width: 768px) {
-    header .container {
-        flex-direction: column;
+/* --- Rodapé --- */
+footer {
+    background-color: var(--cor-principal);
+    color: var(--cor-texto-claro);
+    text-align: center;
+    padding: 30px 20px;
+    margin-top: auto; /* Empurra o rodapé para o fim da página com flexbox no body */
+    box-shadow: 0 -2px 5px var(--cor-sombra);
+}
+
+/* --- WhatsApp Button --- */
+.whatsapp-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: var(--cor-sucesso);
+    color: var(--cor-texto-claro);
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    text-decoration: none; /* Para garantir que o link não tenha underline */
+}
+
+.whatsapp-button:hover {
+    background-color: #208a3d;
+    transform: scale(1.05);
+}
+
+/* Imagens responsivas */
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Seções Principais (Home, Imóveis, etc.) */
+main.container {
+    flex-grow: 1; /* Permite que o main ocupe todo o espaço disponível */
+    padding-top: 40px; /* Adicionado um padding superior para o conteúdo não colar no menu */
+    padding-bottom: 40px; /* Adicionado um padding inferior para o conteúdo não colar no footer */
+}
+
+/* Ajustes para layouts flexíveis (ex: cards) */
+/* Esta classe .grid-layout pode ser usada em qualquer lugar que precise de um grid de itens */
+.grid-layout {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px; /* Consistência no espaçamento */
+    padding: 20px 0;
+    justify-items: center; /* Centraliza os itens horizontalmente se não preencherem a célula */
+    align-items: stretch; /* Faz com que todos os itens do grid tenham a mesma altura */
+}
+
+/* Estilo para formulários gerais */
+.form-section {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px var(--cor-sombra);
+    margin-bottom: 40px; /* Aumentado espaçamento */
+    margin-top: 30px; /* Aumentado espaçamento */
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--cor-texto-escuro);
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"],
+.form-group input[type="number"],
+.form-group input[type="tel"],
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--cor-borda);
+    border-radius: 5px;
+    font-size: 1rem;
+    color: var(--cor-texto-escuro);
+    background-color: var(--cor-fundo-claro);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    border-color: var(--cor-secundaria);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+
+/* --- Media Queries para Responsividade --- */
+
+/* Para telas menores que 992px (tablets e celulares) */
+@media (max-width: 991.98px) {
+    .container {
+        padding: 0 15px; /* Reduz o padding lateral em telas menores */
+    }
+
+    /* Navegação para telas menores */
+    nav {
+        flex-direction: column; /* Empilha logo e links */
         align-items: flex-start;
+        padding: 10px 15px; /* Ajusta padding da nav */
     }
 
-    header nav {
-        margin-top: 10px;
+    .logo {
+        margin-bottom: 15px; /* Espaço abaixo do logo */
     }
 
-    header nav ul {
-        flex-direction: column;
-        align-items: flex-start;
+    .nav-links {
+        flex-direction: column; /* Links um abaixo do outro */
+        width: 100%; /* Ocupa largura total */
     }
 
-    header nav li {
+    .nav-links li {
         margin-left: 0;
-        margin-bottom: 10px;
-    }
-
-    #form-busca input[type="text"] {
+        margin-bottom: 10px; /* Espaço entre links */
         width: 100%;
-        border-radius: 5px;
-        margin-bottom: 10px;
     }
 
-    #form-busca button[type="submit"] {
-        width: 100%;
-        border-radius: 5px;
+    .nav-links a {
+        display: block; /* Faz o link ocupar toda a largura */
+        padding: 8px 0;
+        text-align: center; /* Centraliza o texto dos links na mobile */
     }
 
-    .lista-destaques {
-        flex-direction: column;
-        align-items: center;
+    h2 {
+        font-size: 1.8rem;
+        margin-top: 30px;
+        margin-bottom: 20px;
     }
 
-    .card-imovel {
-        width: 90%;
+    .form-section {
+        padding: 20px;
+        margin-bottom: 30px;
+        margin-top: 20px;
+    }
+
+    .whatsapp-button {
+        width: 50px;
+        height: 50px;
+        font-size: 1.8rem;
+        bottom: 15px;
+        right: 15px;
+    }
+}
+
+/* Para telas muito pequenas (celulares) */
+@media (max-width: 575.98px) {
+    .container {
+        padding: 0 10px; /* Padding ainda menor para telas muito pequenas */
+    }
+
+    h2 {
+        font-size: 1.6rem;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+
+    button, .button {
+        padding: 10px 15px;
+        font-size: 0.95rem;
     }
 }
